@@ -57,7 +57,7 @@ void printBoard(vector<string> const nums, vector<string> const strs)
     cout << "     |     |      \n\n";
 }
 
-void testIntInput(int &playerCount)
+void checkPlayerNumInput(int &playerCount)
 {
     int test;
     cout << "Will there be 1 or 2 players? (1/2) ";
@@ -71,7 +71,7 @@ void testIntInput(int &playerCount)
     else
     {
         cout << "please re-enter your choice, with either a 1 or a 2\n";
-        testIntInput(playerCount);
+        checkPlayerNumInput(playerCount);
     }
 }
 
@@ -119,26 +119,107 @@ bool compareSolutions(vector<vector<string>> const &solutions = solutionComparis
     return false;
 }
 
-void autoTurnCalc(vector<string> strs,int &turns)
+void autoTurn(vector<string> strs,int &turns)
 {
     int idx = random(strs.size());
     if (strs[idx] == "")
     {
         strs[idx] = "o";
+        turns++;
     }
     else
     {
-        autoTurnCalc(strs,turns);
+        autoTurn(strs,turns);
+    }
+}
+
+void chooseFirstPlayer(int &player,bool const &human){
+    int temp = random(2);
+    
+    if (temp == 0){
+        player = 1;
+        cout << "Player 1 goes first!\n";
+    }
+    else
+    {
+        player = 2;
+        cout << "Player 2 goes first!\n";
+        if(!human){
+            cout << "Computer Taking turn...\n";
+        }
+    }
+}
+void getTurnInput(int &inputChoice){
+    int temp;
+
+    cout << "Enter the Space Number that you wish to choose: (1-9) ";
+    cin >> temp;
+    cout << "\n";
+    if (temp == 1 || temp == 2 || temp == 3 || temp == 4 || temp == 5 || temp == 6 || temp == 7 || temp == 8 || temp == 9)
+    {
+        inputChoice = temp;
+    } else {
+        cout << "Please choose a number between 1 & 9\n";
+        getTurnInput(inputChoice);
+    }
+}
+
+void checkTurnInput(int const &inputChoice,string const &playerStr,vector<string> strs,int &turns){
+    if(strs[choice - 1] == ""){
+        strs[choice - 1] = playerStr;
+        turns++;
+    } else {
+        cout << "Please choose again, and make sure that your choice has not been taken already.\n";
+        getTurnInput(inputChoice)
+    }
+}
+
+void takeTurn(int &player,vector<string> strs,int &turns)
+{
+    int choice;
+    string activeCharacter;
+
+    if(player == 1){
+        activeCharacter = "x";
+    }else {
+        activeCharacter = "o";
+    }
+
+    cout << "Player " << player << " - GO!\n";
+    getTurnInput(choice);
+    checkTurnInput(choice,activeCharacter,strs);
+
+    if(player == 1){
+        player++;
+    } else{
+        player--;
     }
 }
 
 void onePlayerInit(vector<string> const nums = intBoard, vector<string> strs = strBoard)
 {
     int turnCounter = 0;
+    bool humanPlayer = false;
+    int currPlayerNumber;
+
+    chooseFirstPlayer(currPlayerNumber,humanPlayer);
+    takeTurn(currPlayerNumber,strs,turnCounter);
+    if(compareSolutions()){
+        string playAgain;
+        cout << "You won!!!\n\nPlayer "<< currPlayerNumber << " WINS!!!\n\nDo you want to play again? (y/n) ";
+        cin >> playAgain;
+        if(playAgain == "y" || "Y"){
+            initGame();
+        }
+    }
 }
 void twoPlayerInit(vector<string> const nums = intBoard, vector<string> strs = strBoard)
 {
     int turnCounter = 0;
+    bool humanPlayer = true;
+    int currPlayerNumber = 1;
+
+    chooseFirstPlayer(currPlayerNumber, humanPlayer);
 }
 
 void initGame()

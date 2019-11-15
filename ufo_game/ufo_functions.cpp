@@ -1,10 +1,6 @@
 #include <iostream>
 #include <vector>
 
-// Define functions
-
-#include <vector>
-
 using namespace std;
 
 int misses = 0;
