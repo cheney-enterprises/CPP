@@ -23,7 +23,7 @@ int ttt_game::random(int max_num)
 
 void ttt_game::printBoard()
 {
-
+    
     cout << "     |     |      \n";
     cout << "  " << printResults(0) << "  |  " << printResults(1) << "  |  " << printResults(2) << "   \n";
     cout << "_____|_____|_____ \n";
@@ -78,8 +78,8 @@ int ttt_game::introduction()
     cout << "Tic-Tac-Toe\n";
     cout << "===========\n\n";
 
-    cout << "Player 1) x\n";
-    cout << "Player 2) o\n\n";
+    cout << "Player 1) X\n";
+    cout << "Player 2) O\n\n";
 
     cout << "Here's the 3 x 3 grid:\n\n";
 
@@ -115,7 +115,7 @@ bool ttt_game::compareSolutions()
 
 void ttt_game::autoTurn()
 {
-    
+    srand(time(0));
 
     int idx = random(strs.size());
     if (strs[idx] == "")
@@ -123,7 +123,7 @@ void ttt_game::autoTurn()
         if(turnsTakenCounter > 0){
             cout << "Computer is taking turn...\n";
         }
-        strs[idx] = "o";
+        strs[idx] = "O";
         turnsTakenCounter++;
     }
     else
@@ -198,7 +198,7 @@ void ttt_game::onePlayerInit()
     
     while(turnsTakenCounter < 9){
         if(currPlayer == 1){
-            takeTurn("x");
+            takeTurn("X");
             if(compareSolutions()){
                 printBoard();
                 string playAgain;
@@ -233,7 +233,7 @@ void ttt_game::onePlayerInit()
                 } else { return; }
             }
             currPlayer--;
-            takeTurn("x");
+            takeTurn("X");
             if(compareSolutions()){
                 printBoard();
                 string playAgain;
@@ -253,9 +253,10 @@ void ttt_game::onePlayerInit()
             cin >> playAgain;
             if(playAgain == "y" || playAgain == "Y"){
                 initGame();
-            } 
-        
-    }
+            } else {
+                return;
+            }
+        }
 }
 
 void ttt_game::twoPlayerInit()
@@ -264,7 +265,7 @@ void ttt_game::twoPlayerInit()
     while(turnsTakenCounter < 9){
     
     if(currPlayer == 1){
-        takeTurn("x");
+        takeTurn("X");
         if(compareSolutions()){
                 printBoard();
                 string playAgain;
@@ -275,7 +276,7 @@ void ttt_game::twoPlayerInit()
                 } else { return; }
             }
             currPlayer++;
-        takeTurn("o");
+        takeTurn("O");
         if(compareSolutions()){
                 printBoard();
                 string playAgain;
@@ -287,7 +288,7 @@ void ttt_game::twoPlayerInit()
             }
             currPlayer--;
     } else {
-        takeTurn("o");
+        takeTurn("O");
         if(compareSolutions()){
                 printBoard();
                 string playAgain;
@@ -298,7 +299,7 @@ void ttt_game::twoPlayerInit()
                 } else { return; }
             }
         currPlayer--;
-        takeTurn("x");
+        takeTurn("X");
         if(compareSolutions()){
                 printBoard();
                 string playAgain;

@@ -15,18 +15,9 @@ class ttt_game {
     vector<string> nums = {
     "1", "2", "3", "4", "5", "6", "7", "8", "9"};
     vector<vector<string>> const possSolutions = {
-        {"x", "x", "x"},
-        {"o", "o", "o"}};
+        {"X", "X", "X"},
+        {"O", "O", "O"}};
     
-
-    // pre-declared references to the class-wide private vectors declared above - this was done to ensure that references are passed in all of the class functions without errors in passing references to references, etc.;
-
-    // vector<string> &nums = globalNumBoardVars;
-    // vector<string> &strs = globalStrBoardVars;
-    // vector<vector<string>> &possSolutions = solutionComparisons;
-    // vector<vector<string>> &currSolutions = actualSolutions;
-
-    // function variables for access to all class functions
 
     int playerCount;
     int turnsTakenCounter;
