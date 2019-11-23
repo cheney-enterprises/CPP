@@ -1,6 +1,7 @@
 #include "ttt_functions.cpp"
 
 int main(){
-
-    initGame();
+    srand(time(0));
+    ttt_game play;
+    play.initGame();
 }

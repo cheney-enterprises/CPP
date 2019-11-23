@@ -4308,6 +4308,7 @@ vector<string> words = {"aardvark",
 
 void display_misses(int misses)
 {
+    
     cout << "\033[2J\033[1;1H";
     if (misses == 0 || misses == 1)
     {
@@ -4499,12 +4500,16 @@ void displayDashes(string dashes)
 int initGame()
 {
     string play;
+    misses = 0;
+    incorrectLetters = {};
+    cout << "\033[2J\033[1;1H";
     greet();
     cout << "Do you wanna play? (Y/N): ";
     cin >> play;
     cout << "\n";
     if (play == "y" || play == "Y")
     {
+        
         cout << "\033[2J\033[1;1H";
         string currWord = wordGen(words);
         string dashes = generateDashes(currWord);
@@ -4530,7 +4535,14 @@ int initGame()
         if (misses == 6 && dashes != currWord)
         {
             
-            cout << "You Lost! \n\nThe Word was:   "<< currWord << "\n\nRun program again to try again!\n";
+            cout << "You Lost! \n\nThe Word was:   "<< currWord << "\n\nDo you want to play again> (y/n) ";
+            string again;
+            cin >> again;
+            cout << "\n";
+            if (again == "y" || "Y")
+            {
+                initGame();
+            }
         }
     }
     return 0;

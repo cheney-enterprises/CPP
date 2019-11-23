@@ -2,30 +2,9 @@
 
 using namespace std;
 
-vector<string> globalStrBoardVars = {"", "", "", "", "", "", "", "", ""};
-vector<string> const globalNumBoardVars = {
-    "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-
-vector<string> const &intBoard = globalNumBoardVars;
-vector<string> &strBoard = globalStrBoardVars;
-
-vector<vector<string>> const solutionComparisons = {
-    {"x", "x", "x"},
-    {"o", "o", "o"}};
-
-vector<vector<string>> const actualSolutions = {
-    {strBoard[0], strBoard[1], strBoard[2]},
-    {strBoard[3], strBoard[4], strBoard[5]},
-    {strBoard[6], strBoard[7], strBoard[8]},
-    {strBoard[0], strBoard[3], strBoard[6]},
-    {strBoard[1], strBoard[4], strBoard[7]},
-    {strBoard[2], strBoard[5], strBoard[8]},
-    {strBoard[0], strBoard[4], strBoard[8]},
-    {strBoard[2], strBoard[4], strBoard[6]}};
-
-string printResults(int x, vector<string> const nums, vector<string> const strs)
+string ttt_game::printResults(int x)
 {
-    locale loc;
+    
     if (strs[x] == "")
     {
         return nums[x];
@@ -36,50 +15,58 @@ string printResults(int x, vector<string> const nums, vector<string> const strs)
     }
 }
 
-int random(int max_num)
+int ttt_game::random(int max_num)
 {
-    srand(time(NULL));
-
+    //srand(time(rand() % 10000));
     return rand() % max_num;
 }
 
-void printBoard(vector<string> const nums, vector<string> const strs)
+void ttt_game::printBoard()
 {
 
     cout << "     |     |      \n";
-    cout << "  " << printResults(0, nums, strs) << "  |  " << printResults(1, nums, strs) << "  |  " << printResults(2, nums, strs) << "   \n";
+    cout << "  " << printResults(0) << "  |  " << printResults(1) << "  |  " << printResults(2) << "   \n";
     cout << "_____|_____|_____ \n";
     cout << "     |     |      \n";
-    cout << "  " << printResults(3, nums, strs) << "  |  " << printResults(4, nums, strs) << "  |  " << printResults(5, nums, strs) << "   \n";
+    cout << "  " << printResults(3) << "  |  " << printResults(4) << "  |  " << printResults(5) << "   \n";
     cout << "_____|_____|_____ \n";
     cout << "     |     |      \n";
-    cout << "  " << printResults(6, nums, strs) << "  |  " << printResults(7, nums, strs) << "  |  " << printResults(8, nums, strs) << "   \n";
+    cout << "  " << printResults(6) << "  |  " << printResults(7) << "  |  " << printResults(8) << "   \n";
     cout << "     |     |      \n\n";
 }
 
-void checkPlayerNumInput(int &playerCount)
+void ttt_game::checkPlayerNumInput()
 {
-    int test;
+    int temp;
     cout << "Will there be 1 or 2 players? (1/2) ";
-    cin >> test;
+    cin >> temp;
     cout << "\n";
-    if (test == 1 || test == 2)
+    if (temp == 1 || temp == 2)
     {
-        playerCount = test;
+        playerCount = temp;
+
+        if(temp == 2){
+            isHuman = true;
+        }
+
         cout << "\n";
     }
     else
     {
         cout << "please re-enter your choice, with either a 1 or a 2\n";
-        checkPlayerNumInput(playerCount);
+        checkPlayerNumInput();
     }
 }
 
-int introduction(vector<string> const nums = intBoard, vector<string> strs = strBoard)
+int ttt_game::introduction()
 {
     strs = {"", "", "", "", "", "", "", "", ""};
-
-    int players;
+    playerCount = 0;
+    turnsTakenCounter = 0;
+    currPlayer = 0;
+    isHuman = false;
+    activeCharacter = "";
+    currChoice = 0;
 
     cout
         << "Press [Enter] to begin: ";
@@ -96,60 +83,75 @@ int introduction(vector<string> const nums = intBoard, vector<string> strs = str
 
     cout << "Here's the 3 x 3 grid:\n\n";
 
-    printBoard(nums, strs);
+    printBoard();
 
     cout << "\n";
 
-    testIntInput(players);
+    checkPlayerNumInput();
 
-    return players;
+    return playerCount;
 }
 
-// parameter [1] solutions should hold solutionComparisons vector, parameter [2] actual should hold actualSolutions vector, which refers to the globalStrBoardVars which are the live guesses
-
-bool compareSolutions(vector<vector<string>> const &solutions = solutionComparisons, vector<vector<string>> const &actual = actualSolutions)
+bool ttt_game::compareSolutions()
 {
-    for (int i = 0; i < actual.size(); i++)
+    vector<vector<string>> currSolutions = {
+        {strs[0], strs[1], strs[2]},
+        {strs[3], strs[4], strs[5]},
+        {strs[6], strs[7], strs[8]},
+        {strs[0], strs[3], strs[6]},
+        {strs[1], strs[4], strs[7]},
+        {strs[2], strs[5], strs[8]},
+        {strs[0], strs[4], strs[8]},
+        {strs[2], strs[4], strs[6]}};
+    for (int i = 0; i < currSolutions.size(); i++)
     {
-        if (actual[i] == solutions[0] || actual[i] == solutions[1])
+        if (currSolutions[i] == possSolutions[0] || currSolutions[i] == possSolutions[1])
         {
             return true;
         }
-    };
+    }
     return false;
 }
 
-void autoTurn(vector<string> strs,int &turns)
+void ttt_game::autoTurn()
 {
+    
+
     int idx = random(strs.size());
     if (strs[idx] == "")
     {
+        if(turnsTakenCounter > 0){
+            cout << "Computer is taking turn...\n";
+        }
         strs[idx] = "o";
-        turns++;
+        turnsTakenCounter++;
     }
     else
     {
-        autoTurn(strs,turns);
+        autoTurn();
     }
 }
 
-void chooseFirstPlayer(int &player,bool const &human){
+void ttt_game::chooseFirstPlayer(){
     int temp = random(2);
     
     if (temp == 0){
-        player = 1;
-        cout << "Player 1 goes first!\n";
+        currPlayer = 1;
+        cout << "Player 1 goes first!\n\n";
     }
     else
     {
-        player = 2;
-        cout << "Player 2 goes first!\n";
-        if(!human){
-            cout << "Computer Taking turn...\n";
+        currPlayer = 2;
+        cout << "Player 2 goes first!\n\n";
+        if(!isHuman){
+            cout << "Computer Taking turn...\n\n";
+            
         }
     }
+
 }
-void getTurnInput(int &inputChoice){
+
+void ttt_game::getTurnInput(){
     int temp;
 
     cout << "Enter the Space Number that you wish to choose: (1-9) ";
@@ -157,72 +159,169 @@ void getTurnInput(int &inputChoice){
     cout << "\n";
     if (temp == 1 || temp == 2 || temp == 3 || temp == 4 || temp == 5 || temp == 6 || temp == 7 || temp == 8 || temp == 9)
     {
-        inputChoice = temp;
-    } else {
+        currChoice = temp;
+    }
+    else
+    {
         cout << "Please choose a number between 1 & 9\n";
-        getTurnInput(inputChoice);
+        getTurnInput();
     }
 }
 
-void checkTurnInput(int const &inputChoice,string const &playerStr,vector<string> strs,int &turns){
-    if(strs[choice - 1] == ""){
-        strs[choice - 1] = playerStr;
-        turns++;
+void ttt_game::checkTurnInput(){
+    if(strs[currChoice - 1] == ""){
+        strs[currChoice - 1] = activeCharacter;
+        turnsTakenCounter++;
     } else {
         cout << "Please choose again, and make sure that your choice has not been taken already.\n";
-        getTurnInput(inputChoice)
+        getTurnInput();
     }
 }
 
-void takeTurn(int &player,vector<string> strs,int &turns)
+void ttt_game::takeTurn(string x)
 {
-    int choice;
-    string activeCharacter;
+    activeCharacter = x;
+    
+    printBoard();
 
-    if(player == 1){
-        activeCharacter = "x";
-    }else {
-        activeCharacter = "o";
-    }
+    cout << "Player " << currPlayer << " - GO!\n";
+    getTurnInput();
+    checkTurnInput();
 
-    cout << "Player " << player << " - GO!\n";
-    getTurnInput(choice);
-    checkTurnInput(choice,activeCharacter,strs);
-
-    if(player == 1){
-        player++;
-    } else{
-        player--;
-    }
+    printBoard();
 }
 
-void onePlayerInit(vector<string> const nums = intBoard, vector<string> strs = strBoard)
+void ttt_game::onePlayerInit()
 {
-    int turnCounter = 0;
-    bool humanPlayer = false;
-    int currPlayerNumber;
 
-    chooseFirstPlayer(currPlayerNumber,humanPlayer);
-    takeTurn(currPlayerNumber,strs,turnCounter);
-    if(compareSolutions()){
-        string playAgain;
-        cout << "You won!!!\n\nPlayer "<< currPlayerNumber << " WINS!!!\n\nDo you want to play again? (y/n) ";
-        cin >> playAgain;
-        if(playAgain == "y" || "Y"){
-            initGame();
+    chooseFirstPlayer();
+    
+    while(turnsTakenCounter < 9){
+        if(currPlayer == 1){
+            takeTurn("x");
+            if(compareSolutions()){
+                printBoard();
+                string playAgain;
+                cout << "You won!!!\n\nPlayer 1 WINS!!!\n\nDo you want to play again? (y/n) ";
+                cin >> playAgain;
+                if(playAgain == "y" || playAgain == "Y"){
+                    initGame();
+                } else { return; }
+            }
+            currPlayer++;
+        cout << "Next Player's Turn! \n";
+        autoTurn();
+        if(compareSolutions()){
+                printBoard();
+                string playAgain;
+                cout << "Oh No! The Computer won!!!\n\nDo you want to play again? (y/n) ";
+                cin >> playAgain;
+                if(playAgain == "y" || playAgain == "Y"){
+                    initGame();
+                } else { return; }
+            }
+            currPlayer--;
+        } else {
+            autoTurn();
+            if(compareSolutions()){
+                printBoard();
+                string playAgain;
+                cout << "Oh No! The Computer won!!!\n\nDo you want to play again? (y/n) ";
+                cin >> playAgain;
+                if(playAgain == "y" || playAgain == "Y"){
+                    initGame();
+                } else { return; }
+            }
+            currPlayer--;
+            takeTurn("x");
+            if(compareSolutions()){
+                printBoard();
+                string playAgain;
+                cout << "You won!!!\n\nPlayer 1 WINS!!!\n\nDo you want to play again? (y/n) ";
+                cin >> playAgain;
+                if(playAgain == "y" || playAgain == "Y"){
+                    initGame();
+                } else { return; }
+            }
+            currPlayer++;
+
         }
     }
+    if(turnsTakenCounter == 9){
+            string playAgain;
+            cout << "It was a DRAW!\nDo you want to play again? (y/n) ";
+            cin >> playAgain;
+            if(playAgain == "y" || playAgain == "Y"){
+                initGame();
+            } 
+        
+    }
 }
-void twoPlayerInit(vector<string> const nums = intBoard, vector<string> strs = strBoard)
+
+void ttt_game::twoPlayerInit()
 {
-    int turnCounter = 0;
-    bool humanPlayer = true;
-    int currPlayerNumber = 1;
-
-    chooseFirstPlayer(currPlayerNumber, humanPlayer);
+    chooseFirstPlayer();
+    while(turnsTakenCounter < 9){
+    
+    if(currPlayer == 1){
+        takeTurn("x");
+        if(compareSolutions()){
+                printBoard();
+                string playAgain;
+                cout << "You won!!!\n\nPlayer 1 WINS!!!\n\nDo you want to play again? (y/n) ";
+                cin >> playAgain;
+                if(playAgain == "y" || playAgain == "Y"){
+                    initGame();
+                } else { return; }
+            }
+            currPlayer++;
+        takeTurn("o");
+        if(compareSolutions()){
+                printBoard();
+                string playAgain;
+                cout << "You won!!!\n\nPlayer 2 WINS!!!\n\nDo you want to play again? (y/n) ";
+                cin >> playAgain;
+                if(playAgain == "y" || playAgain == "Y"){
+                    initGame();
+                } else { return; }
+            }
+            currPlayer--;
+    } else {
+        takeTurn("o");
+        if(compareSolutions()){
+                printBoard();
+                string playAgain;
+                cout << "You won!!!\n\nPlayer 2 WINS!!!\n\nDo you want to play again? (y/n) ";
+                cin >> playAgain;
+                if(playAgain == "y" || playAgain == "Y"){
+                    initGame();
+                } else { return; }
+            }
+        currPlayer--;
+        takeTurn("x");
+        if(compareSolutions()){
+                printBoard();
+                string playAgain;
+                cout << "You won!!!\n\nPlayer 1 WINS!!!\n\nDo you want to play again? (y/n) ";
+                cin >> playAgain;
+                if(playAgain == "y" || playAgain == "Y"){
+                    initGame();
+                } else { return; }
+            }
+        currPlayer++;
+    }}
+    if(turnsTakenCounter == 9){
+            string playAgain;
+            cout << "It was a DRAW!\nDo you want to play again? (y/n) ";
+            cin >> playAgain;
+            if(playAgain == "y" || playAgain == "Y"){
+                initGame();
+            } 
+        
+    }
 }
 
-void initGame()
+void ttt_game::initGame()
 {
     if (introduction() == 1)
     {
