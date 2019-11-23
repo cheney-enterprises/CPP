@@ -37,7 +37,6 @@ class ttt_game {
 
 
     // references to function variables
-    //TODO: remove and uncomment public below
     string printResults(int x);
     int random(int max_num);
     void printBoard();

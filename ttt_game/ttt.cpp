@@ -1,9 +1,7 @@
-#include "ttt_functions.h"
-using namespace std;
+#include "ttt_functions.cpp"
 
 int main()
 {
-    vector<string> boardVars;
-
-    
+    ttt_game play;
+    play.initGame();
 }
