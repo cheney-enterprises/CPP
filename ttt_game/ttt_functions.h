@@ -11,8 +11,8 @@ class ttt_game {
 
     //class-wide private vectors setup
 
-    vector<string> strs = {"", "", "", "", "", "", "", "", ""};
-    vector<string> nums = {
+    vector<string> strs;
+    vector<string> const nums = {
     "1", "2", "3", "4", "5", "6", "7", "8", "9"};
     vector<vector<string>> const possSolutions = {
         {"X", "X", "X"},

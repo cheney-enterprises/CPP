@@ -115,7 +115,7 @@ bool ttt_game::compareSolutions()
 
 void ttt_game::autoTurn()
 {
-    srand(time(0));
+    // srand(time(0));
 
     int idx = random(strs.size());
     if (strs[idx] == "")
@@ -209,19 +209,10 @@ void ttt_game::onePlayerInit()
                 } else { return; }
             }
             currPlayer++;
-        cout << "Next Player's Turn! \n";
-        autoTurn();
-        if(compareSolutions()){
-                printBoard();
-                string playAgain;
-                cout << "Oh No! The Computer won!!!\n\nDo you want to play again? (y/n) ";
-                cin >> playAgain;
-                if(playAgain == "y" || playAgain == "Y"){
-                    initGame();
-                } else { return; }
-            }
-            currPlayer--;
-        } else {
+            cout << "Next Player's Turn! \n";
+        
+        } 
+        else {
             autoTurn();
             if(compareSolutions()){
                 printBoard();
@@ -230,21 +221,12 @@ void ttt_game::onePlayerInit()
                 cin >> playAgain;
                 if(playAgain == "y" || playAgain == "Y"){
                     initGame();
-                } else { return; }
+                } else { 
+                    return; 
+                }
             }
             currPlayer--;
-            takeTurn("X");
-            if(compareSolutions()){
-                printBoard();
-                string playAgain;
-                cout << "You won!!!\n\nPlayer 1 WINS!!!\n\nDo you want to play again? (y/n) ";
-                cin >> playAgain;
-                if(playAgain == "y" || playAgain == "Y"){
-                    initGame();
-                } else { return; }
-            }
-            currPlayer++;
-
+            cout << "Next Player's Turn! \n";
         }
     }
     if(turnsTakenCounter == 9){
@@ -273,20 +255,13 @@ void ttt_game::twoPlayerInit()
                 cin >> playAgain;
                 if(playAgain == "y" || playAgain == "Y"){
                     initGame();
-                } else { return; }
+                } 
+                else { 
+                    return; 
+                    }
             }
             currPlayer++;
-        takeTurn("O");
-        if(compareSolutions()){
-                printBoard();
-                string playAgain;
-                cout << "You won!!!\n\nPlayer 2 WINS!!!\n\nDo you want to play again? (y/n) ";
-                cin >> playAgain;
-                if(playAgain == "y" || playAgain == "Y"){
-                    initGame();
-                } else { return; }
-            }
-            currPlayer--;
+        
     } else {
         takeTurn("O");
         if(compareSolutions()){
@@ -296,20 +271,13 @@ void ttt_game::twoPlayerInit()
                 cin >> playAgain;
                 if(playAgain == "y" || playAgain == "Y"){
                     initGame();
-                } else { return; }
+                } 
+                else { 
+                    return; 
+                    }
             }
         currPlayer--;
-        takeTurn("X");
-        if(compareSolutions()){
-                printBoard();
-                string playAgain;
-                cout << "You won!!!\n\nPlayer 1 WINS!!!\n\nDo you want to play again? (y/n) ";
-                cin >> playAgain;
-                if(playAgain == "y" || playAgain == "Y"){
-                    initGame();
-                } else { return; }
-            }
-        currPlayer++;
+        
     }}
     if(turnsTakenCounter == 9){
             string playAgain;
@@ -317,8 +285,11 @@ void ttt_game::twoPlayerInit()
             cin >> playAgain;
             if(playAgain == "y" || playAgain == "Y"){
                 initGame();
-            } 
-        
+            }
+            else
+            {
+                return;
+            }
     }
 }
 
